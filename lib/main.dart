@@ -42,35 +42,63 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Image Picker Example'),
       ),
-      body: GridView.count(
-        primary: false,
-    padding: const EdgeInsets.all(20),
-    crossAxisSpacing: 10,
-    mainAxisSpacing: 10,
-    crossAxisCount: 2,
-  children: [
-          Column(
-            children: <Widget>[ 
-               (_image == null) ?
-               Text('No image selected.') 
-               :
-                Image.file(_image, height: 150, width: 150, ),
-                Text('Untitled List'),
+      body: (_image == null) ?
+             Center( 
+             child: Column( 
+                mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                  Text('No image selected.'),
+            // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            // floatingActionButton:
+            FloatingActionButton(
+                onPressed: getImage,
+                  tooltip: 'Pick Image',
+                child: Icon(Icons.add_a_photo),
+                shape: RoundedRectangleBorder(),
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+          ],
+        ),
+     ) 
+     
+             :  GridView.count(
+               primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+               children: [
+                 Column(
+                   children: [
+                     Image.file(_image, height: 150, width: 150, ), 
+                     Text('Untitled List'),
+                   ],
+                 ),
+               ],
+             ),
+      
+      
+  //      GridView.count(
+  //       primary: false,
+  //   padding: const EdgeInsets.all(20),
+  //   crossAxisSpacing: 10,
+  //   mainAxisSpacing: 10,
+  //   crossAxisCount: 2,
+  // children: [
+  //         Column(
+  //           children: <Widget>[ 
+  //              (_image == null) ?
+  //              Text('No image selected.') 
+  //              :
+  //               Image.file(_image, height: 150, width: 150, ),
+  //               Text('Untitled List'),
 
-            // padding: EdgeInsets.all(20),
-            ]
-          ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
-        shape: RoundedRectangleBorder(),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
+  //           // padding: EdgeInsets.all(20),
+  //           ]
+  //         ),
+  //       ],
+  //     ),
+      
     );
   }
 }
