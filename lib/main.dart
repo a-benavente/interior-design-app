@@ -40,65 +40,47 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Image Picker Example'),
+        title: Text('Interior Organizer'),
       ),
       body: (_image == null) ?
              Center( 
              child: Column( 
                 mainAxisAlignment: MainAxisAlignment.center,
                  children: [
-                  Text('No image selected.'),
-            // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            // floatingActionButton:
-            FloatingActionButton(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('No image selected.'),
+                  ),
+            OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.indigo
+                ),
                 onPressed: getImage,
-                  tooltip: 'Pick Image',
-                child: Icon(Icons.add_a_photo),
-                shape: RoundedRectangleBorder(),
-                backgroundColor: Theme.of(context).primaryColor,
+                label : Text('Pick Image'),
+                icon: Icon(Icons.add_a_photo),
               ),
           ],
         ),
      ) 
-     
-             :  GridView.count(
-               primary: false,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-               children: [
-                 Column(
+             : GridView.count(
+                  primary: false,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
                    children: [
-                     Image.file(_image, height: 150, width: 150, ), 
-                     Text('Untitled List'),
+                     Column(
+                       children: [
+                         Image.file(_image, height: 150, width: 150,), 
+                         Padding(
+                           padding: const EdgeInsets.fromLTRB(0, 8, 0,0),
+                           child: Text('Untitled List'),
+                         ),
+                       ],
+                     ),
                    ],
                  ),
-               ],
-             ),
-      
-      
-  //      GridView.count(
-  //       primary: false,
-  //   padding: const EdgeInsets.all(20),
-  //   crossAxisSpacing: 10,
-  //   mainAxisSpacing: 10,
-  //   crossAxisCount: 2,
-  // children: [
-  //         Column(
-  //           children: <Widget>[ 
-  //              (_image == null) ?
-  //              Text('No image selected.') 
-  //              :
-  //               Image.file(_image, height: 150, width: 150, ),
-  //               Text('Untitled List'),
-
-  //           // padding: EdgeInsets.all(20),
-  //           ]
-  //         ),
-  //       ],
-  //     ),
-      
+            
     );
   }
 }
