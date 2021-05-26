@@ -26,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
+    
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -39,48 +39,64 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Interior Organizer'),
-      ),
-      body: (_image == null) ?
-             Center( 
-             child: Column( 
-                mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('No image selected.'),
-                  ),
-            OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.indigo
-                ),
-                onPressed: getImage,
-                label : Text('Pick Image'),
-                icon: Icon(Icons.add_a_photo),
-              ),
+        appBar: AppBar(
+          toolbarHeight: 60,
+          title: Text('Interior Organizer'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('Edit Lists', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(primary: Colors.green),
+            )
           ],
         ),
-     ) 
-             : GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                   children: [
-                     Column(
-                       children: [
-                         Image.file(_image, height: 150, width: 150,), 
-                         Padding(
-                           padding: const EdgeInsets.fromLTRB(0, 8, 0,0),
-                           child: Text('Untitled List'),
-                         ),
-                       ],
-                     ),
-                   ],
-                 ),
-            
-    );
+        body: (_image == null)
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('No image selected.'),
+                    ),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(primary: Colors.indigo),
+                      onPressed: getImage,
+                      label: Text('Pick Image'),
+                      icon: Icon(Icons.add_a_photo),
+                    ),
+                  ],
+                ),
+              )
+            : GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+                children: [
+                  Column(
+                    children: [
+                      Image.file(
+                        _image,
+                        height: 150,
+                        width: 150,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: Text('Untitled List'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+        bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          child: Row(children: [
+            IconButton(
+              icon: Icon(Icons.add),
+            )
+          ]),
+        ));
   }
 }
