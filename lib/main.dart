@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'utilities/shared_prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,18 +25,59 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   File _image;
+  Uint8List bytes;
+
   final picker = ImagePicker();
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    
+  Future<void> getImageFromGallery() async {
+    final pickedFile = await picker.getImage(
+      source: ImageSource.gallery,
+    );
+
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+
+        ImageSharedPrefs.saveImageToPrefs(
+            ImageSharedPrefs.base64String(_image.readAsBytesSync()));
+        // need to correct this I think there is an issue with the PickedFile return from the ImagePicker ..
       } else {
         print('No image selected.');
       }
     });
+  }
+
+  Future getImageFromCamera() async {
+    final pickedFile = await picker.getImage(
+      source: ImageSource.camera,
+    );
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        bytes = _image.readAsBytesSync();
+        ImageSharedPrefs.saveImageToPrefs(ImageSharedPrefs.base64String(bytes));
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  loadImageFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final imageKeyValue = prefs.getString(IMAGE_KEY);
+    if (imageKeyValue != null) {
+      final imageString = await ImageSharedPrefs.loadImageFromPrefs();
+      setState(() {
+        _image = ImageSharedPrefs.imageFrom64BaseString(imageString);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadImageFromPrefs();
   }
 
   @override
@@ -59,11 +103,25 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text('No image selected.'),
                     ),
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(primary: Colors.indigo),
-                      onPressed: getImage,
-                      label: Text('Pick Image'),
-                      icon: Icon(Icons.add_a_photo),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton.icon(
+                          style:
+                              OutlinedButton.styleFrom(primary: Colors.indigo),
+                          onPressed: getImageFromGallery,
+                          label: Text(''),
+                          icon: Icon(Icons.add_a_photo),
+                        ),
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.indigo,
+                          ),
+                          onPressed: getImageFromCamera,
+                          label: Text(''), //fix this because it is not working
+                          icon: Icon(Icons.add_a_photo),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -94,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
           shape: const CircularNotchedRectangle(),
           child: Row(children: [
             IconButton(
+              onPressed: () {},
               icon: Icon(Icons.add),
             )
           ]),
